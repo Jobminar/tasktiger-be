@@ -1,0 +1,1264 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Sample API with Swagger",
+    "version": "1.0.0",
+    "description": "A sample API to demonstrate Swagger's integration with Node.js"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Development server"
+    }
+  ],
+  "paths": {
+    "/categories": {
+      "post": {
+        "summary": "Create a new category",
+        "tags": [
+          "Categories"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Category created successfully"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      },
+      "get": {
+        "summary": "Get a list of all categories",
+        "tags": [
+          "Categories"
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of categories",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/categories/details/{id}": {
+      "get": {
+        "summary": "Get a category by ID",
+        "tags": [
+          "Categories"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The category ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The category details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Category not found"
+          }
+        }
+      }
+    },
+    "/service-variants": {
+      "post": {
+        "summary": "Create a new service variant",
+        "tags": [
+          "ServiceVariants"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "serviceId"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the service variant"
+                  },
+                  "serviceId": {
+                    "type": "string",
+                    "description": "The ID of the related service"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Service variant created successfully"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      },
+      "get": {
+        "summary": "Get a list of all service variants",
+        "tags": [
+          "ServiceVariants"
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of service variants",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "serviceId": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/services": {
+      "post": {
+        "summary": "Create a new service",
+        "tags": [
+          "Services"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "description"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the service"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "The description of the service"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Service created successfully"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      },
+      "get": {
+        "summary": "Get a list of all services",
+        "tags": [
+          "Services"
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of services",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "description": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/services/delete/{id}": {
+      "delete": {
+        "summary": "Delete a service by ID",
+        "tags": [
+          "Services"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The service ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Service deleted successfully"
+          },
+          "404": {
+            "description": "Service not found"
+          }
+        }
+      }
+    },
+    "/subcategories": {
+      "post": {
+        "summary": "Create a new subcategory",
+        "tags": [
+          "Subcategories"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "categoryId"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the subcategory"
+                  },
+                  "categoryId": {
+                    "type": "string",
+                    "description": "The ID of the parent category"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Subcategory created successfully"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      },
+      "get": {
+        "summary": "Get a list of all subcategories",
+        "tags": [
+          "Subcategories"
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of subcategories",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "categoryId": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/subcategories/details/{id}": {
+      "get": {
+        "summary": "Get a subcategory by ID",
+        "tags": [
+          "Subcategories"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The subcategory ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Subcategory retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "categoryId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subcategory not found"
+          }
+        }
+      }
+    },
+    "/admin/signup": {
+      "post": {
+        "summary": "Admin signup",
+        "tags": [
+          "Admin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email",
+                  "password"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Admin signed up successfully"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      }
+    },
+    "/admin/login": {
+      "post": {
+        "summary": "Admin login",
+        "tags": [
+          "Admin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email",
+                  "password"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Admin logged in successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/admin/send-otp": {
+      "post": {
+        "summary": "Send OTP for password reset",
+        "tags": [
+          "Admin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OTP sent successfully"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      }
+    },
+    "/admin/verify-otp": {
+      "post": {
+        "summary": "Verify OTP for password reset",
+        "tags": [
+          "Admin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email",
+                  "otp"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "otp": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OTP verified successfully"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      }
+    },
+    "/admin/change-password": {
+      "post": {
+        "summary": "Change password",
+        "tags": [
+          "Admin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email",
+                  "newPassword"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "newPassword": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password changed successfully"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      }
+    },
+    "/induction": {
+      "post": {
+        "summary": "Create a new induction",
+        "tags": [
+          "Induction"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Induction"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Induction created successfully"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      },
+      "get": {
+        "summary": "Get all inductions",
+        "tags": [
+          "Induction"
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of all inductions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Induction"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/induction/{id}": {
+      "get": {
+        "summary": "Get an induction by ID",
+        "tags": [
+          "Induction"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the induction to get"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The induction object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Induction"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Induction not found"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update an induction",
+        "tags": [
+          "Induction"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the induction to update"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Induction"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Induction updated successfully"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "Induction not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete an induction",
+        "tags": [
+          "Induction"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the induction to delete"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Induction deleted successfully"
+          },
+          "404": {
+            "description": "Induction not found"
+          }
+        }
+      }
+    },
+    "/provider-promotions": {
+      "post": {
+        "summary": "Create a new provider promotion",
+        "tags": [
+          "Provider Promotions"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProviderPromotion"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Provider promotion created successfully"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      },
+      "get": {
+        "summary": "Get all provider promotions",
+        "tags": [
+          "Provider Promotions"
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of provider promotions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProviderPromotion"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/provider-promotions/{id}": {
+      "delete": {
+        "summary": "Delete a provider promotion by ID",
+        "tags": [
+          "Provider Promotions"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "ID of the provider promotion to delete"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Provider promotion deleted successfully"
+          },
+          "404": {
+            "description": "Provider promotion not found"
+          }
+        }
+      }
+    },
+    "/user-promotions": {
+      "post": {
+        "summary": "Create a new user promotion",
+        "tags": [
+          "User Promotions"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserPromotion"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User promotion created successfully"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      },
+      "get": {
+        "summary": "Get all user promotions",
+        "tags": [
+          "User Promotions"
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of user promotions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserPromotion"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user-promotions/{id}": {
+      "delete": {
+        "summary": "Delete a user promotion by ID",
+        "tags": [
+          "User Promotions"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "ID of the user promotion to delete"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "User promotion deleted successfully"
+          },
+          "404": {
+            "description": "User promotion not found"
+          }
+        }
+      }
+    },
+    "/training": {
+      "post": {
+        "summary": "Create a new training",
+        "tags": [
+          "Training"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Training"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Training created successfully"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      },
+      "get": {
+        "summary": "Get all trainings",
+        "tags": [
+          "Training"
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of trainings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Training"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/training/{id}": {
+      "get": {
+        "summary": "Get a training by ID",
+        "tags": [
+          "Training"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "ID of the training to retrieve"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A training object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Training"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Training not found"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update a training by ID",
+        "tags": [
+          "Training"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "ID of the training to update"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Training"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Training updated successfully"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "Training not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a training by ID",
+        "tags": [
+          "Training"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "ID of the training to delete"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Training deleted successfully"
+          },
+          "404": {
+            "description": "Training not found"
+          }
+        }
+      }
+    },
+    "/providers": {
+      "post": {
+        "summary": "Create a new service provider",
+        "tags": [
+          "Service Providers"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ServiceProvider"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Service provider created successfully"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      },
+      "get": {
+        "summary": "Get all service providers",
+        "tags": [
+          "Service Providers"
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of service providers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ServiceProvider"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/providers/{id}": {
+      "get": {
+        "summary": "Get a service provider by ID",
+        "tags": [
+          "Service Providers"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "ID of the service provider to retrieve"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A service provider object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceProvider"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Service provider not found"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update a service provider by ID",
+        "tags": [
+          "Service Providers"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "ID of the service provider to update"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ServiceProvider"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Service provider updated successfully"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "Service provider not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a service provider by ID",
+        "tags": [
+          "Service Providers"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "ID of the service provider to delete"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Service provider deleted successfully"
+          },
+          "404": {
+            "description": "Service provider not found"
+          }
+        }
+      }
+    },
+    "/providers/{id}/credits": {
+      "patch": {
+        "summary": "Update service provider credits by ID",
+        "tags": [
+          "Service Providers"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "ID of the service provider to update credits"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "credits": {
+                    "type": "number",
+                    "description": "The new credits value"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Service provider credits updated successfully"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "Service provider not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {},
+  "tags": [
+    {
+      "name": "Categories",
+      "description": "Categories management"
+    },
+    {
+      "name": "ServiceVariants",
+      "description": "Service Variants management"
+    },
+    {
+      "name": "Services",
+      "description": "Services management"
+    },
+    {
+      "name": "Subcategories",
+      "description": "Subcategories management"
+    },
+    {
+      "name": "Admin",
+      "description": "Admin management and authentication"
+    },
+    {
+      "name": "Induction",
+      "description": "API endpoints for managing inductions"
+    },
+    {
+      "name": "Provider Promotions",
+      "description": "API endpoints for managing provider promotions"
+    },
+    {
+      "name": "User Promotions",
+      "description": "API endpoints for managing user promotions"
+    },
+    {
+      "name": "Training",
+      "description": "API endpoints for managing training"
+    },
+    {
+      "name": "Service Providers",
+      "description": "API endpoints for managing service providers"
+    }
+  ]
+}

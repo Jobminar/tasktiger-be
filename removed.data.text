@@ -1,0 +1,15 @@
+    // service schema =>
+
+  price: { type: Number, default: 0 },
+  serviceTime: { type: Number, default: 0 },
+   metric: { type: String, required: true },
+   locations: [{ type: String, required: true }],
+    taxPercentage: { type: Number, default: 0 },
+     platformCommission: { type: Number, default: 0 },
+       tag: { type: Boolean, default: false },
+        creditEligibility: { type: Boolean, default: false },
+        miscFee: { type: Number, required: false },
+  isCash: { type: Boolean, default: true },
+   //
+
+

@@ -1,0 +1,106 @@
+﻿location,pincode,district,state,category,subcategory,servicename,price,variants,min,max,metric,creditEligibility,taxPercentage,miscFee,platformCommission,isCash
+Gachibowli,500032,Hyderabad,Telangana,Cleaning,House Cleaning,Studio /1 BHK Full House Cleaning(401 to 600 Sqft) ,"₹ 1,000.00","""{normal"": ""10"", ""deep"": ""20""}",200,300,10,TRUE,100000%,2000%,20,TRUE
+Gachibowli,500032,Hyderabad,Telangana,Cleaning,House Cleaning,2 BHK Full House Cleaning (601 to 1000 Sqft),"₹ 1,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,11,TRUE,100000%,2000%,20,TRUE
+Gachibowli,500032,Hyderabad,Telangana,Cleaning,House Cleaning,3 BHK Full House Cleaning(1001-1500 Sqft,"₹ 1,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,12,TRUE,100000%,2000%,20,TRUE
+Gachibowli,500032,Hyderabad,Telangana,Cleaning,House Cleaning,4 BHK Full House Cleaning(1501-2100 Sqft),"₹ 1,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,13,TRUE,100000%,2000%,20,TRUE
+Gachibowli,500032,Hyderabad,Telangana,Cleaning,House Cleaning,5 BHK Full House Cleaning (3000 - 4000 Sqft),"₹ 1,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,14,TRUE,100000%,2000%,20,TRUE
+Gachibowli,500032,Hyderabad,Telangana,Cleaning,Kitchen  Cleaning,Kithcen Cleaning,"₹ 1,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,15,TRUE,100000%,2000%,20,TRUE
+Gachibowli,500032,Hyderabad,Telangana,Cleaning,Bathroom Cleaning,1 Bathroom Cleaning,"₹ 1,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,16,TRUE,100000%,2000%,20,TRUE
+Gachibowli,500032,Hyderabad,Telangana,Cleaning,Bathroom Cleaning,2 Bathroom Cleaning,"₹ 1,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,17,TRUE,100000%,2000%,20,TRUE
+Gachibowli,500032,Hyderabad,Telangana,Cleaning,Bathroom Cleaning,3 Bathroom Cleaning,"₹ 1,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,18,TRUE,100000%,2000%,20,TRUE
+Gachibowli,500032,Hyderabad,Telangana,Cleaning,Villa Full House Cleaning,Villa Full House Cleaning (2000 - 3000 Sqft),"₹ 1,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,19,TRUE,100000%,2000%,20,TRUE
+Gachibowli,500032,Hyderabad,Telangana,Cleaning,Villa Full House Cleaning,Villa Full House Cleaning(3000 - 4000 Sqft),"₹ 1,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,20,TRUE,100000%,2000%,20,TRUE
+Gachibowli,500032,Hyderabad,Telangana,Cleaning,Villa Full House Cleaning,Villa Full House Cleaning(4000 - 5000 Sqft),"₹ 1,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,21,TRUE,100000%,2000%,20,TRUE
+Gachibowli,500032,Hyderabad,Telangana,Cleaning,Villa Full House Cleaning,Villa Full House Cleaning (5000 - 6000 Sqft),"₹ 1,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,22,TRUE,100000%,2000%,20,TRUE
+Gachibowli,500032,Hyderabad,Telangana,Cleaning,Villa Full House Cleaning,Villa Full House Cleaning (7000 - 8000 Sqft),"₹ 1,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,23,TRUE,100000%,2000%,20,TRUE
+Gachibowli,500032,Hyderabad,Telangana,Cleaning,Water Tank ,Water Tank (1000 liters),"₹ 1,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,24,TRUE,100000%,2000%,20,TRUE
+Gachibowli,500032,Hyderabad,Telangana,Cleaning,Water Tank ,Water Tank  (1000 - 3000 liters),"₹ 1,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,25,TRUE,100000%,2000%,20,TRUE
+Gachibowli,500032,Hyderabad,Telangana,Cleaning,Water Tank ,Water Tank (3000 - 5000 liters),"₹ 1,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,26,TRUE,100000%,2000%,20,TRUE
+Gachibowli,500032,Hyderabad,Telangana,Cleaning,Water Tank ,Water Tank  (5000 - 7000 liters),"₹ 1,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,27,TRUE,100000%,2000%,20,TRUE
+Gachibowli,500032,Hyderabad,Telangana,Cleaning,After party Cleaning,After party Cleaning (5000 - 7000 liters,"₹ 1,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,28,TRUE,100000%,2000%,20,TRUE
+Gachibowli,500032,Hyderabad,Telangana,Cleaning,After party Cleaning,After party Cleaning (1000 sq ft),"₹ 1,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,29,TRUE,100000%,2000%,20,TRUE
+Gachibowli,500032,Hyderabad,Telangana,Cleaning,After party Cleaning,After party Cleaning (1000 - 2000 sq ft),"₹ 1,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,30,TRUE,100000%,2000%,20,TRUE
+Gachibowli,500032,Hyderabad,Telangana,Cleaning,After party Cleaning,After party Cleaning(2000 - 5000 sq ft),"₹ 1,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,31,TRUE,100000%,2000%,20,TRUE
+Gachibowli,500032,Hyderabad,Telangana,Cleaning,After party Cleaning,After party Cleaning (5000 - 7000 sq ft),"₹ 1,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,32,TRUE,100000%,2000%,20,TRUE
+Gachibowli,500032,Hyderabad,Telangana,Cleaning,Sanitization,Sanitization(401 to 600 Sqft) ,"₹ 1,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,33,TRUE,100000%,2000%,20,TRUE
+Gachibowli,500032,Hyderabad,Telangana,Cleaning,Sanitization,Sanitization (601 to 1000 Sqft),"₹ 1,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,34,TRUE,100000%,2000%,20,TRUE
+Gachibowli,500032,Hyderabad,Telangana,Cleaning,Sanitization,Sanitization(1001-1500 Sqft,"₹ 1,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,35,TRUE,100000%,2000%,20,TRUE
+Gachibowli,500032,Hyderabad,Telangana,Cleaning,Sanitization,Sanitization(1501-2100 Sqft),"₹ 1,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,36,TRUE,100000%,2000%,20,TRUE
+Gachibowli,500032,Hyderabad,Telangana,Cleaning,Sanitization,Sanitization (3000 - 4000 Sqft),"₹ 1,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,37,TRUE,100000%,2000%,20,TRUE
+Gachibowli,500032,Hyderabad,Telangana,Cleaning,Swimming pool cleaning,Basic Cleaning Package,"₹ 1,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,38,TRUE,100000%,2000%,20,TRUE
+Gachibowli,500032,Hyderabad,Telangana,Cleaning,Swimming pool cleaning,Standard Cleaning Package,"₹ 1,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,39,TRUE,100000%,2000%,20,TRUE
+Gachibowli,500032,Hyderabad,Telangana,Cleaning,Swimming pool cleaning,Premium Cleaning Package,"₹ 1,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,40,TRUE,100000%,2000%,20,TRUE
+Gachibowli,500032,Hyderabad,Telangana,Cleaning,Car Wash,Basic car wash Package,"₹ 1,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,41,TRUE,100000%,2000%,20,TRUE
+Gachibowli,500032,Hyderabad,Telangana,Cleaning,Car Wash,Standard car wash Package,"₹ 1,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,42,TRUE,100000%,2000%,20,TRUE
+Gachibowli,500032,Hyderabad,Telangana,Cleaning,Car Wash,Premium car wash Package,"₹ 1,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,43,TRUE,100000%,2000%,20,TRUE
+Gachibowli,500032,Hyderabad,Telangana,Cleaning,Car Wash,Ultimate Car Wash Protection Package,"₹ 1,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,44,TRUE,100000%,2000%,20,TRUE
+Jubilee Hills,500033,Hyderabad,Telangana,Cleaning,House Cleaning,Studio /1 BHK Full House Cleaning(401 to 600 Sqft) ,"₹ 2,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,45,TRUE,100000%,2000%,20,TRUE
+Jubilee Hills,500033,Hyderabad,Telangana,Cleaning,House Cleaning,2 BHK Full House Cleaning (601 to 1000 Sqft),"₹ 2,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,46,TRUE,100000%,2000%,20,TRUE
+Jubilee Hills,500033,Hyderabad,Telangana,Cleaning,House Cleaning,3 BHK Full House Cleaning(1001-1500 Sqft,"₹ 2,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,47,TRUE,100000%,2000%,20,TRUE
+Jubilee Hills,500033,Hyderabad,Telangana,Cleaning,House Cleaning,4 BHK Full House Cleaning(1501-2100 Sqft),"₹ 2,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,48,TRUE,100000%,2000%,20,TRUE
+Jubilee Hills,500033,Hyderabad,Telangana,Cleaning,House Cleaning,5 BHK Full House Cleaning (3000 - 4000 Sqft),"₹ 2,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,49,TRUE,100000%,2000%,20,TRUE
+Jubilee Hills,500033,Hyderabad,Telangana,Cleaning,Kitchen  Cleaning,Kithcen Cleaning,"₹ 2,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,50,TRUE,100000%,2000%,20,TRUE
+Jubilee Hills,500033,Hyderabad,Telangana,Cleaning,Bathroom Cleaning,1 Bathroom Cleaning,"₹ 2,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,51,TRUE,100000%,2000%,20,TRUE
+Jubilee Hills,500033,Hyderabad,Telangana,Cleaning,Bathroom Cleaning,2 Bathroom Cleaning,"₹ 2,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,52,TRUE,100000%,2000%,20,TRUE
+Jubilee Hills,500033,Hyderabad,Telangana,Cleaning,Bathroom Cleaning,3 Bathroom Cleaning,"₹ 2,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,53,TRUE,100000%,2000%,20,TRUE
+Jubilee Hills,500033,Hyderabad,Telangana,Cleaning,Villa Full House Cleaning,Villa Full House Cleaning (2000 - 3000 Sqft),"₹ 2,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,54,TRUE,100000%,2000%,20,TRUE
+Jubilee Hills,500033,Hyderabad,Telangana,Cleaning,Villa Full House Cleaning,Villa Full House Cleaning(3000 - 4000 Sqft),"₹ 2,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,55,TRUE,100000%,2000%,20,TRUE
+Jubilee Hills,500033,Hyderabad,Telangana,Cleaning,Villa Full House Cleaning,Villa Full House Cleaning(4000 - 5000 Sqft),"₹ 2,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,56,TRUE,100000%,2000%,20,TRUE
+Jubilee Hills,500033,Hyderabad,Telangana,Cleaning,Villa Full House Cleaning,Villa Full House Cleaning (5000 - 6000 Sqft),"₹ 2,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,57,TRUE,100000%,2000%,20,TRUE
+Jubilee Hills,500033,Hyderabad,Telangana,Cleaning,Villa Full House Cleaning,Villa Full House Cleaning (7000 - 8000 Sqft),"₹ 2,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,58,TRUE,100000%,2000%,20,TRUE
+Jubilee Hills,500033,Hyderabad,Telangana,Cleaning,Water Tank ,Water Tank (1000 liters),"₹ 2,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,59,TRUE,100000%,2000%,20,TRUE
+Jubilee Hills,500033,Hyderabad,Telangana,Cleaning,Water Tank ,Water Tank  (1000 - 3000 liters),"₹ 2,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,60,TRUE,100000%,2000%,20,TRUE
+Jubilee Hills,500033,Hyderabad,Telangana,Cleaning,Water Tank ,Water Tank (3000 - 5000 liters),"₹ 2,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,61,TRUE,100000%,2000%,20,TRUE
+Jubilee Hills,500033,Hyderabad,Telangana,Cleaning,Water Tank ,Water Tank  (5000 - 7000 liters),"₹ 2,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,62,TRUE,100000%,2000%,20,TRUE
+Jubilee Hills,500033,Hyderabad,Telangana,Cleaning,After party Cleaning,After party Cleaning (5000 - 7000 liters,"₹ 2,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,63,TRUE,100000%,2000%,20,TRUE
+Jubilee Hills,500033,Hyderabad,Telangana,Cleaning,After party Cleaning,After party Cleaning (1000 sq ft),"₹ 2,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,64,TRUE,100000%,2000%,20,TRUE
+Jubilee Hills,500033,Hyderabad,Telangana,Cleaning,After party Cleaning,After party Cleaning (1000 - 2000 sq ft),"₹ 2,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,65,TRUE,100000%,2000%,20,TRUE
+Jubilee Hills,500033,Hyderabad,Telangana,Cleaning,After party Cleaning,After party Cleaning(2000 - 5000 sq ft),"₹ 2,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,66,TRUE,100000%,2000%,20,TRUE
+Jubilee Hills,500033,Hyderabad,Telangana,Cleaning,After party Cleaning,After party Cleaning (5000 - 7000 sq ft),"₹ 2,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,67,TRUE,100000%,2000%,20,TRUE
+Jubilee Hills,500033,Hyderabad,Telangana,Cleaning,Sanitization,Sanitization(401 to 600 Sqft) ,"₹ 2,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,68,TRUE,100000%,2000%,20,TRUE
+Jubilee Hills,500033,Hyderabad,Telangana,Cleaning,Sanitization,Sanitization (601 to 1000 Sqft),"₹ 2,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,69,TRUE,100000%,2000%,20,TRUE
+Jubilee Hills,500033,Hyderabad,Telangana,Cleaning,Sanitization,Sanitization(1001-1500 Sqft,"₹ 2,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,70,TRUE,100000%,2000%,20,TRUE
+Jubilee Hills,500033,Hyderabad,Telangana,Cleaning,Sanitization,Sanitization(1501-2100 Sqft),"₹ 2,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,71,TRUE,100000%,2000%,20,TRUE
+Jubilee Hills,500033,Hyderabad,Telangana,Cleaning,Sanitization,Sanitization (3000 - 4000 Sqft),"₹ 2,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,72,TRUE,100000%,2000%,20,TRUE
+Jubilee Hills,500033,Hyderabad,Telangana,Cleaning,Swimming pool cleaning,Basic Cleaning Package,"₹ 2,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,73,TRUE,100000%,2000%,20,TRUE
+Jubilee Hills,500033,Hyderabad,Telangana,Cleaning,Swimming pool cleaning,Standard Cleaning Package,"₹ 2,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,74,TRUE,100000%,2000%,20,TRUE
+Jubilee Hills,500033,Hyderabad,Telangana,Cleaning,Swimming pool cleaning,Premium Cleaning Package,"₹ 2,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,75,TRUE,100000%,2000%,20,TRUE
+Jubilee Hills,500033,Hyderabad,Telangana,Cleaning,Car Wash,Basic car wash Package,"₹ 2,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,76,TRUE,100000%,2000%,20,TRUE
+Jubilee Hills,500033,Hyderabad,Telangana,Cleaning,Car Wash,Standard car wash Package,"₹ 2,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,77,TRUE,100000%,2000%,20,TRUE
+Jubilee Hills,500033,Hyderabad,Telangana,Cleaning,Car Wash,Premium car wash Package,"₹ 2,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,78,TRUE,100000%,2000%,20,TRUE
+Jubilee Hills,500033,Hyderabad,Telangana,Cleaning,Car Wash,Ultimate Car Wash Protection Package,"₹ 2,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,79,TRUE,100000%,2000%,20,TRUE
+Banjara Hills,500034,Hyderabad,Telangana,Cleaning,House Cleaning,Studio /1 BHK Full House Cleaning(401 to 600 Sqft) ,"₹ 3,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,80,TRUE,100000%,2000%,20,TRUE
+Banjara Hills,500034,Hyderabad,Telangana,Cleaning,House Cleaning,2 BHK Full House Cleaning (601 to 1000 Sqft),"₹ 3,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,81,TRUE,100000%,2000%,20,TRUE
+Banjara Hills,500034,Hyderabad,Telangana,Cleaning,House Cleaning,3 BHK Full House Cleaning(1001-1500 Sqft,"₹ 3,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,82,TRUE,100000%,2000%,20,TRUE
+Banjara Hills,500034,Hyderabad,Telangana,Cleaning,House Cleaning,4 BHK Full House Cleaning(1501-2100 Sqft),"₹ 3,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,83,TRUE,100000%,2000%,20,TRUE
+Banjara Hills,500034,Hyderabad,Telangana,Cleaning,House Cleaning,5 BHK Full House Cleaning (3000 - 4000 Sqft),"₹ 3,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,84,TRUE,100000%,2000%,20,TRUE
+Banjara Hills,500034,Hyderabad,Telangana,Cleaning,Kitchen  Cleaning,Kithcen Cleaning,"₹ 3,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,85,TRUE,100000%,2000%,20,TRUE
+Banjara Hills,500034,Hyderabad,Telangana,Cleaning,Bathroom Cleaning,1 Bathroom Cleaning,"₹ 3,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,86,TRUE,100000%,2000%,20,TRUE
+Banjara Hills,500034,Hyderabad,Telangana,Cleaning,Bathroom Cleaning,2 Bathroom Cleaning,"₹ 3,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,87,TRUE,100000%,2000%,20,TRUE
+Banjara Hills,500034,Hyderabad,Telangana,Cleaning,Bathroom Cleaning,3 Bathroom Cleaning,"₹ 3,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,88,TRUE,100000%,2000%,20,TRUE
+Banjara Hills,500034,Hyderabad,Telangana,Cleaning,Villa Full House Cleaning,Villa Full House Cleaning (2000 - 3000 Sqft),"₹ 3,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,89,TRUE,100000%,2000%,20,TRUE
+Banjara Hills,500034,Hyderabad,Telangana,Cleaning,Villa Full House Cleaning,Villa Full House Cleaning(3000 - 4000 Sqft),"₹ 3,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,90,TRUE,100000%,2000%,20,TRUE
+Banjara Hills,500034,Hyderabad,Telangana,Cleaning,Villa Full House Cleaning,Villa Full House Cleaning(4000 - 5000 Sqft),"₹ 3,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,91,TRUE,100000%,2000%,20,TRUE
+Banjara Hills,500034,Hyderabad,Telangana,Cleaning,Villa Full House Cleaning,Villa Full House Cleaning (5000 - 6000 Sqft),"₹ 3,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,92,TRUE,100000%,2000%,20,TRUE
+Banjara Hills,500034,Hyderabad,Telangana,Cleaning,Villa Full House Cleaning,Villa Full House Cleaning (7000 - 8000 Sqft),"₹ 3,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,93,TRUE,100000%,2000%,20,TRUE
+Banjara Hills,500034,Hyderabad,Telangana,Cleaning,Water Tank ,Water Tank (1000 liters),"₹ 3,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,94,TRUE,100000%,2000%,20,TRUE
+Banjara Hills,500034,Hyderabad,Telangana,Cleaning,Water Tank ,Water Tank  (1000 - 3000 liters),"₹ 3,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,95,TRUE,100000%,2000%,20,TRUE
+Banjara Hills,500034,Hyderabad,Telangana,Cleaning,Water Tank ,Water Tank (3000 - 5000 liters),"₹ 3,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,96,TRUE,100000%,2000%,20,TRUE
+Banjara Hills,500034,Hyderabad,Telangana,Cleaning,Water Tank ,Water Tank  (5000 - 7000 liters),"₹ 3,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,97,TRUE,100000%,2000%,20,TRUE
+Banjara Hills,500034,Hyderabad,Telangana,Cleaning,After party Cleaning,After party Cleaning (5000 - 7000 liters,"₹ 3,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,98,TRUE,100000%,2000%,20,TRUE
+Banjara Hills,500034,Hyderabad,Telangana,Cleaning,After party Cleaning,After party Cleaning (1000 sq ft),"₹ 3,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,99,TRUE,100000%,2000%,20,TRUE
+Banjara Hills,500034,Hyderabad,Telangana,Cleaning,After party Cleaning,After party Cleaning (1000 - 2000 sq ft),"₹ 3,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,100,TRUE,100000%,2000%,20,TRUE
+Banjara Hills,500034,Hyderabad,Telangana,Cleaning,After party Cleaning,After party Cleaning(2000 - 5000 sq ft),"₹ 3,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,101,TRUE,100000%,2000%,20,TRUE
+Banjara Hills,500034,Hyderabad,Telangana,Cleaning,After party Cleaning,After party Cleaning (5000 - 7000 sq ft),"₹ 3,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,102,TRUE,100000%,2000%,20,TRUE
+Banjara Hills,500034,Hyderabad,Telangana,Cleaning,Sanitization,Sanitization(401 to 600 Sqft) ,"₹ 3,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,103,TRUE,100000%,2000%,20,TRUE
+Banjara Hills,500034,Hyderabad,Telangana,Cleaning,Sanitization,Sanitization (601 to 1000 Sqft),"₹ 3,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,104,TRUE,100000%,2000%,20,TRUE
+Banjara Hills,500034,Hyderabad,Telangana,Cleaning,Sanitization,Sanitization(1001-1500 Sqft,"₹ 3,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,105,TRUE,100000%,2000%,20,TRUE
+Banjara Hills,500034,Hyderabad,Telangana,Cleaning,Sanitization,Sanitization(1501-2100 Sqft),"₹ 3,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,106,TRUE,100000%,2000%,20,TRUE
+Banjara Hills,500034,Hyderabad,Telangana,Cleaning,Sanitization,Sanitization (3000 - 4000 Sqft),"₹ 3,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,107,TRUE,100000%,2000%,20,TRUE
+Banjara Hills,500034,Hyderabad,Telangana,Cleaning,Swimming pool cleaning,Basic Cleaning Package,"₹ 3,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,108,TRUE,100000%,2000%,20,TRUE
+Banjara Hills,500034,Hyderabad,Telangana,Cleaning,Swimming pool cleaning,Standard Cleaning Package,"₹ 3,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,109,TRUE,100000%,2000%,20,TRUE
+Banjara Hills,500034,Hyderabad,Telangana,Cleaning,Swimming pool cleaning,Premium Cleaning Package,"₹ 3,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,110,TRUE,100000%,2000%,20,TRUE
+Banjara Hills,500034,Hyderabad,Telangana,Cleaning,Car Wash,Basic car wash Package,"₹ 3,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,111,TRUE,100000%,2000%,20,TRUE
+Banjara Hills,500034,Hyderabad,Telangana,Cleaning,Car Wash,Standard car wash Package,"₹ 3,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,112,TRUE,100000%,2000%,20,TRUE
+Banjara Hills,500034,Hyderabad,Telangana,Cleaning,Car Wash,Premium car wash Package,"₹ 3,000","""{normal"": ""10"", ""deep"": ""20""}",200,300,113,TRUE,100000%,2000%,20,TRUE
+Banjara Hills,500034,Hyderabad,Telangana,Labour supply,Car Wash,Ultimate Car Wash Protection Package,,"""{normal"": ""10"", ""deep"": ""20""}",200,300,114,TRUE,100000%,2000%,20,TRUE

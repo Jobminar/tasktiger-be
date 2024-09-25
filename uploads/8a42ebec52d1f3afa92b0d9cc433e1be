@@ -1,0 +1,47 @@
+district,location,pincode,state,category,subcategory,servicename,price,offerPrice,min,max,metric,creditEligibility,taxPercentage,miscFee,platformCommission,isCash,isCustom
+Medchal-Malkajgiri,Hyderabad,500060,Telangana,Cleaning,House cleaning,1BHK Cleaning,"{'Normal': '2', 'Deep': '3'}","{'Normal': '1', 'Deep': '2'}",0,1,sqft,TRUE,1,1,1,TRUE,FALSE
+Medchal-Malkajgiri,Hyderabad,500060,Telangana,Cleaning,Kitchen cleaning,Test,"{'Normal': '2', 'Deep': '3'}","{'Normal': '1', 'Deep': '2'}",0,1,sqft,TRUE,1,1,1,TRUE,FALSE
+Medchal-Malkajgiri,Hyderabad,500060,Telangana,Electrical,Wiring,New internal wiring ( per 5m),{'None': '1'},{'None': '1'},10,100,mts,TRUE,1,1,1,TRUE,TRUE
+Medchal-Malkajgiri,Hyderabad,500060,Telangana,Electrical,Wiring,New internal wiring with casing (per 5m),{'None': '1'},{'None': '0'},10,100,mts,TRUE,1,1,1,TRUE,TRUE
+Medchal-Malkajgiri,Hyderabad,500060,Telangana,Electrical,Wiring,New internal wiring without casing(per 5m),{'None': '1'},{'None': '1'},10,100,mts,TRUE,1,1,1,TRUE,TRUE
+Medchal-Malkajgiri,Hyderabad,500060,Telangana,Electrical,Door Bell,Door bell installation,{'None': '1'},{'None': '2'},1,2,quantity,TRUE,1,1,1,TRUE,FALSE
+Medchal-Malkajgiri,Hyderabad,500060,Telangana,Electrical,Door Bell,Door bell replacement,{'None': '1'},{'None': '2'},1,2,quantity,TRUE,1,1,1,TRUE,FALSE
+Medchal-Malkajgiri,Hyderabad,500060,Telangana,Electrical,Appliance Installation,Ceiling Fan Installation /Uninstallation,{'None': '1'},{'None': '1'},1,2,quantity,TRUE,1,1,1,TRUE,FALSE
+Medchal-Malkajgiri,Hyderabad,500060,Telangana,Electrical,Appliance Installation,Home Theatre,{'None': '2'},{'None': '1'},1,2,quantity,TRUE,1,1,1,TRUE,FALSE
+Tirupati,Tiruchanur,517501,Andhra Pradesh,Electrical,Appliance Installation,TV Installation / unistalltion,{'None': '3'},{'None': '1'},1,2,quantity,TRUE,1,1,1,TRUE,FALSE
+Tirupati,Tiruchanur,517501,Andhra Pradesh,Plumber,Basin & sink,Waste Pipe leakage,{'None': '1'},{'None': '1'},2,2,quantity,TRUE,1,1,1,TRUE,FALSE
+Tirupati,Tiruchanur,517501,Andhra Pradesh,Plumber,Tap & Mixer,Tap Repair,{'None': '2'},{'None': '1'},1,3,quantity,TRUE,1,1,1,TRUE,FALSE
+Tirupati,Tiruchanur,517501,Andhra Pradesh,Carpenter,Drilling & Hanging & Fittings,Wall Decor & Frames,{'None': '3'},{'None': '1'},1,2,quantity,TRUE,1,1,1,TRUE,FALSE
+Tirupati,Tiruchanur,517501,Andhra Pradesh,Carpenter,Drilling & Hanging & Fittings,Glass/ Wood Shelf Installation,{'None': '1'},{'None': '1'},1,2,quantity,TRUE,1,1,1,TRUE,FALSE
+Tirupati,Tiruchanur,517501,Andhra Pradesh,Carpenter,Bed,Bed support repair,{'None': '1'},{'None': '1'},1,1,quantity,TRUE,1,1,1,TRUE,FALSE
+Tirupati,Tiruchanur,517501,Andhra Pradesh,Carpenter,Bed,Bed support repair,{'None': '1'},{'None': '1'},1,2,quantity,TRUE,1,1,1,TRUE,FALSE
+Ranga Reddy,Ibrahimpatnam,501506,Telangana,Painting,Interior Painting (Fresh),Distemper Paints,{'None': '2'},{'None': '2'},1,3,sqft,TRUE,1,1,1,TRUE,FALSE
+Ranga Reddy,Ibrahimpatnam,501506,Telangana,Painting,Interior Painting (Repainting),Interior Painting (Repainting),{'None': '3'},{'None': '3'},1,4,sqft,TRUE,1,1,1,TRUE,FALSE
+Ranga Reddy,Ibrahimpatnam,501506,Telangana,Appliance Repair,AC / Air Conditioner,AC / Air Conditioner Service,{'None': '1'},{'None': '1'},1,2,quantity,TRUE,1,1,1,TRUE,FALSE
+Ranga Reddy,Ibrahimpatnam,501506,Telangana,Appliance Repair,Refrigerator,Repair,{'None': '2'},{'None': '2'},1,2,quantity,TRUE,1,1,1,TRUE,FALSE
+Ranga Reddy,Ibrahimpatnam,501506,Telangana,Laundry,Blazer,Blazer,{'Men': '3'},{Men': '3'},1,3,member,TRUE,1,1,1,TRUE,FALSE
+Ranga Reddy,Ibrahimpatnam,501506,Telangana,Laundry,saree,saree,{'Women': '3'},{'Women': '3'},1,2,member,TRUE,1,1,1,TRUE,FALSE
+Ranga Reddy,Ibrahimpatnam,501506,Telangana,Laundry,school uniform,school uniform,{'Kids': '2'},{'Kids': '2'},1,2,member,TRUE,1,1,1,TRUE,FALSE
+Ranga Reddy,Ibrahimpatnam,501506,Telangana,Laundry,bed sheet,bed sheet,{'Households': '1'},{'Households': '1'},1,2,member,TRUE,1,1,1,TRUE,FALSE
+Ranga Reddy,Ibrahimpatnam,501506,Telangana,Dry Wash,dry wash (men),dry wash (men),{'Men': '2'},{'Men': '2'},1,2,member,TRUE,1,1,1,TRUE,FALSE
+Ranga Reddy,Ibrahimpatnam,501506,Telangana,Dry Wash,dry wash (women),dry wash (women),{'Women': '3'},{'Women': '3'},1,2,member,TRUE,1,1,1,TRUE,FALSE
+Ranga Reddy,Ibrahimpatnam,501506,Telangana,Dry Wash,dry wash (kids),dry wash (kids),{'Kids': '2'},{'Kids': '2'},1,2,member,TRUE,1,1,1,TRUE,FALSE
+Ranga Reddy,Ibrahimpatnam,501506,Telangana,Dry Wash,dry wash (housholds),drywah(househodls),{'Households': '1'},{'Households': '1'},1,2,member,TRUE,1,1,1,TRUE,FALSE
+Ranga Reddy,Ibrahimpatnam,501506,Telangana,Beauty & Salon,Hair Cut,Combo Haircut - Father & Son,{'Male': '1'},{'Male': '1'},1,2,member,TRUE,1,1,1,TRUE,FALSE
+Ranga Reddy,Ibrahimpatnam,501506,Telangana,Beauty & Salon,Facial,Lotus White Glow (Insta Glow) Facial,{'Female': '2'},{'Female': '1'},1,2,member,TRUE,1,1,1,TRUE,FALSE
+Ranga Reddy,Ibrahimpatnam,501506,Telangana,Beauty & Salon,Body Massage,Body Massage,{'Male': '1'},{'Male': '1'},1,2,member,TRUE,1,1,1,TRUE,FALSE
+Ranga Reddy,Ibrahimpatnam,501506,Telangana,Beauty & Salon,Waxing,Waxing,{'Female': '2'},{'Female': '1'},1,2,member,TRUE,1,1,1,TRUE,FALSE
+Ranga Reddy,Ibrahimpatnam,501506,Telangana,Pet Care,Pet Grooming,Pet Grooming,{'None': '1'},{'None': '1'},0,0,null,TRUE,1,1,1,TRUE,FALSE
+Ranga Reddy,Ibrahimpatnam,501506,Telangana,Pet Care,Pet Sitting,Pet Sitting,{'None': '1'},{'None': '1'},0,0,null,TRUE,1,1,1,TRUE,FALSE
+Ranga Reddy,Ibrahimpatnam,501506,Telangana,Pest Control,General Pest Control Services,General Pest Control Services,{'None': '2'},{'None': '1'},1,2,sqft,TRUE,1,1,1,TRUE,FALSE
+Ranga Reddy,Ibrahimpatnam,501506,Telangana,Agriculture & Farming,Crop Health Monitoring Package,Crop Health Monitoring Package,{'Hourly': '1'},{'Hourly': '1'},2,3,cent,TRUE,1,1,1,TRUE,FALSE
+Ranga Reddy,Ibrahimpatnam,501506,Telangana,Agriculture & Farming,Crop Health Monitoring Package,On-Demand Farm local labor (planting),{'Daily': '1'},{'Daily': '1'},1,2,cent,TRUE,1,1,1,TRUE,FALSE
+Ranga Reddy,Ibrahimpatnam,501506,Telangana,Agriculture & Farming,Crop Health Monitoring Package,Crop Health Monitoring Package,{'Monthly': '1'},{'Monthly': '1'},1,2,cent,TRUE,1,1,1,TRUE,FALSE
+Ranga Reddy,Ibrahimpatnam,501506,Telangana,Agriculture & Farming,Utility Vehicles,Utility Vehicles,{'Hourly': '1'},{'Hourly': '1'},1,2,cent,TRUE,1,1,1,TRUE,FALSE
+Ranga Reddy,Ibrahimpatnam,501506,Telangana,Agriculture & Farming,Mowers and Conditioners,Mowers and Conditioners,{'Daily': '1'},{'Daily': '1'},1,2,cent,TRUE,1,1,1,TRUE,FALSE
+Ranga Reddy,Ibrahimpatnam,501506,Telangana,Agriculture & Farming,Sprinkler Systems,Sprinkler Systems,{'Monthly': '1'},{'Monthly': '1'},1,2,cent,TRUE,1,1,1,TRUE,TRUE
+NTR,Vijayawada,520010,Telangana,Labour Supply,Security Services,Security Guards,{'Hourly': '1'},{'Hourly': '1'},1,3,cent,TRUE,1,1,1,TRUE,TRUE
+NTR ,Vijayawada,520010,Telangana,Labour Supply,Agricultural Workers,Farmhands,{'Daily': '1'},{'Daily': '1'},1,4,cent,TRUE,1,1,1,TRUE,TRUE
+NTR ,Vijayawada,520010,Telangana,Labour Supply,Domestic Help,Maids,{'Monthly': '1'},{'Monthly': '1'},1,2,cent,TRUE,1,1,1,TRUE,TRUE
+NTR ,Vijayawada,520010,Telangana,Lock Smith,Emergency Lockout Services,Home / Office Lockouts,{'None': '1'},{'None': '1'},1,2,cent,TRUE,1,1,1,TRUE,TRUE
+NTR ,Vijayawada,520010,Telangana,Lock Installation,Lock Installation,Residential Lock Installation,{'None': '2'},{'None': '2'},2,3,cent,TRUE,1,1,1,TRUE,TRUE
