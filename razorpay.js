@@ -6,8 +6,8 @@ dotenv.config();
 
 // Initialize Razorpay instance
 const razorpay = new Razorpay({
-  key_id: "rzp_live_PNUKhUA4pqmqv0",
-  key_secret: "HCSQG0nRhPhd4R9jWGvTm9j8",
+  key_id: process.env.RAZORPAY_API_KEY,
+  key_secret: process.env.RAZORPAY_API_SECRET,
 });
 
 // Create a router
