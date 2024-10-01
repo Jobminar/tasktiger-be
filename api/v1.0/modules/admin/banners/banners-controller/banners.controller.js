@@ -10,19 +10,23 @@ dotenv.config();
 const containerName = process.env.AZURE_STORAGE_CONTAINER_NAME;
 const blobServiceClient = BlobServiceClient.fromConnectionString(process.env.AZURE_STORAGE_CONNECTION_STRING);
 
+// Create the Azure Blob Storage container if it does not exist
 const createContainerIfNotExists = async () => {
     const containerClient = blobServiceClient.getContainerClient(containerName);
     await containerClient.createIfNotExists();
 };
 
-createContainerIfNotExists();
+createContainerIfNotExists()
+    .catch(err => console.error("Error creating container:", err));
 
+// Configure multer for memory storage
 const storage = multer.memoryStorage();
 const upload = multer({ storage }).single("image");
 
+// Function to upload an image to Azure Blob Storage
 const uploadImageToAzure = async (file) => {
     const fileExtension = path.extname(file.originalname);
-    const blobName = `${uuidv4()}${fileExtension}`;
+    const blobName = `banners/${uuidv4()}${fileExtension}`; // Ensure virtual folder structure
     const containerClient = blobServiceClient.getContainerClient(containerName);
     const blockBlobClient = containerClient.getBlockBlobClient(blobName);
 
@@ -33,8 +37,9 @@ const uploadImageToAzure = async (file) => {
     return blockBlobClient.url; // Return the Azure Blob URL
 };
 
+// Function to delete an image from Azure Blob Storage
 const deleteImageFromAzure = async (imageUrl) => {
-    const blobName = imageUrl.split('/').pop();
+    const blobName = imageUrl.split('/').pop(); // Get the blob name from URL
     const containerClient = blobServiceClient.getContainerClient(containerName);
     const blockBlobClient = containerClient.getBlockBlobClient(blobName);
 
@@ -42,6 +47,7 @@ const deleteImageFromAzure = async (imageUrl) => {
 };
 
 const bannersController = {
+    // Create a new banner
     createBanners: async (req, res) => {
         upload(req, res, async (err) => {
             if (err) {
@@ -67,6 +73,7 @@ const bannersController = {
         });
     },
 
+    // Get all banners
     getAllBanners: async (req, res) => {
         try {
             const banners = await Banners.find();
@@ -77,6 +84,7 @@ const bannersController = {
         }
     },
 
+    // Get banners by type
     getBannersByType: async (req, res) => {
         const { type } = req.params;
 
@@ -96,6 +104,7 @@ const bannersController = {
         }
     },
 
+    // Delete a banner
     deleteBanner: async (req, res) => {
         try {
             const banner = await Banners.findById(req.params.id);
@@ -112,6 +121,7 @@ const bannersController = {
         }
     },
 
+    // Update a banner
     updateBanner: async (req, res) => {
         upload(req, res, async (err) => {
             if (err) {
@@ -126,6 +136,7 @@ const bannersController = {
                     return res.status(404).json({ message: "Banner not found" });
                 }
 
+                // If a new image is uploaded, delete the old one and upload the new one
                 if (req.file) {
                     await deleteImageFromAzure(banner.image);
                     banner.image = await uploadImageToAzure(req.file);
@@ -133,6 +144,7 @@ const bannersController = {
 
                 const { name, category, subCategory, price, service, bannerType } = req.body;
 
+                // Update fields if they are provided
                 if (name) banner.name = name;
                 if (category) banner.category = category;
                 if (subCategory) banner.subCategory = subCategory;

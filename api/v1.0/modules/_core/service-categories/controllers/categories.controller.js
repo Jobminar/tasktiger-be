@@ -13,13 +13,16 @@ dotenv.config();
 const blobServiceClient = BlobServiceClient.fromConnectionString(process.env.AZURE_STORAGE_CONNECTION_STRING);
 const containerClient = blobServiceClient.getContainerClient(process.env.AZURE_STORAGE_CONTAINER_NAME);
 
+// Ensure the container exists (optional)
+await containerClient.createIfNotExists();
+
 // Multer configuration for image uploads
 const storage = multer.memoryStorage();
 const upload = multer({ storage }).single("image");
 
 // Function to upload image to Azure Blob Storage
-const uploadImageToAzure = async (file) => {
-  const blobName = `categories/${uuidv4()}${path.extname(file.originalname)}`;
+const uploadImageToAzure = async (file, folder = 'categories') => {
+  const blobName = `${folder}/${uuidv4()}${path.extname(file.originalname)}`; // Include folder in blob name
   const blockBlobClient = containerClient.getBlockBlobClient(blobName);
 
   // Upload file buffer to Azure Blob
@@ -64,7 +67,7 @@ const categoriesController = {
           return res.status(400).json({ message: "Please provide all required fields" });
         }
 
-        const imageUrl = await uploadImageToAzure(req.file); // No need to specify folder here; it is already managed in the function
+        const imageUrl = await uploadImageToAzure(req.file); // Using the folder structure
 
         const category = new Category({
           name,

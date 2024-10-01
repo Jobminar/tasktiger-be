@@ -3,7 +3,7 @@ import authRouter from "../modules/admin/auth/routes/admin.route.js";
 import goldRouter from "../modules/admin/loyalties/routes/gold.route.js"
 import silverRouter from "../modules/admin/loyalties/routes/silver.route.js"
 import bronzeRouter from "../modules/admin/loyalties/routes/bronze.route.js"
-import userPromotionRoutes from "../modules/admin/promotions/routes/user-promotion.route.js"
+import userPromotionRoutes from '../modules/admin/user-promotions/user-promotion-route/user.promotion.route.js'
 import providerPromotionRoutes from "../modules/admin/promotions/routes/provider-promotion.route.js"
 import inductionRoutes from "../modules/admin/induction/routes/induction.route.js"
 import trainingRoutes from "../modules/admin/training/routes/training.route.js"
