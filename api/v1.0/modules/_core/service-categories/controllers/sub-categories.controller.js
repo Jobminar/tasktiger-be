@@ -1,71 +1,67 @@
+import Subcategory from '../models/sub.categories.model.js';
+import { BlobServiceClient } from "@azure/storage-blob";
 import { v4 as uuidv4 } from "uuid";
 import path from "path";
 import dotenv from "dotenv";
 import multer from "multer";
-import AWS from "aws-sdk";
-import Subcategory from '../models/sub.categories.model.js';
 
 dotenv.config();
 
-const s3 = new AWS.S3({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: process.env.AWS_REGION,
-});
+// Azure Blob Storage configuration
+const blobServiceClient = BlobServiceClient.fromConnectionString(process.env.AZURE_STORAGE_CONNECTION_STRING);
+const containerClient = blobServiceClient.getContainerClient(process.env.AZURE_STORAGE_CONTAINER_NAME);
 
+// Multer configuration for image uploads
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage }).fields([{ name: 'image', maxCount: 1 }]);
+const upload = multer({ storage }).single("image");
 
-const uploadImageToS3 = async (file) => {
-  try {
-    const fileExtension = path.extname(file.originalname);
-    const imageKey = `categories/${uuidv4()}${fileExtension}`;
+// Function to upload image to Azure Blob Storage
+const uploadImageToAzure = async (file) => {
+  const blobName = `sub-categories/${uuidv4()}${path.extname(file.originalname)}`;
+  const blockBlobClient = containerClient.getBlockBlobClient(blobName);
 
-    const s3Params = {
-      Bucket: process.env.AWS_BUCKET_NAME,
-      Key: imageKey,
-      Body: file.buffer,
-      ACL: "public-read",
-      ContentType: file.mimetype,
-    };
+  // Upload file buffer to Azure Blob
+  await blockBlobClient.uploadData(file.buffer, {
+    blobHTTPHeaders: {
+      blobContentType: file.mimetype, // Set the content type to the file's mimetype
+    },
+  });
 
-    const uploadResult = await s3.upload(s3Params).promise();
-    return uploadResult.Location;
-  } catch (error) {
-    console.error("Error uploading image to S3:", error);
-    throw new Error("Error uploading image to S3");
-  }
+  return blockBlobClient.url; // Return the URL to the uploaded image
 };
 
-const deleteImageFromS3 = async (imageKey) => {
-  try {
-    const s3Params = {
-      Bucket: process.env.AWS_BUCKET_NAME,
-      Key: imageKey,
-    };
+// Function to delete image from Azure Blob Storage
+const deleteImageFromAzure = async (imageUrl) => {
+  const blobName = imageUrl.split("/").pop(); // Extract the blob name from the URL
+  const blockBlobClient = containerClient.getBlockBlobClient(blobName);
 
-    await s3.deleteObject(s3Params).promise();
-  } catch (error) {
-    console.error("Error deleting image from S3:", error);
-    throw new Error("Error deleting image from S3");
+  await blockBlobClient.deleteIfExists(); // Delete the image if it exists
+};
+
+// Error handling for multer
+const handleMulterError = (err, res) => {
+  if (err instanceof multer.MulterError) {
+    return res.status(400).json({ message: err.message });
+  } else if (err) {
+    return res.status(500).json({ message: "Server error during file upload" });
   }
 };
 
 const subcategoriesController = {
-  createSubcategory: (req, res) => {
+  createSubcategory: async (req, res) => {
     upload(req, res, async (err) => {
       if (err) {
-        return res.status(400).json({ message: "Error uploading image" });
+        return handleMulterError(err, res);
       }
 
       try {
-        const { name, categoryId,variantName } = req.body;
+        const { name, categoryId, variantName } = req.body;
 
-        if (!name || !variantName || !categoryId ) {
+        if (!name || !variantName || !categoryId) {
           return res.status(400).json({ message: "Please provide all required fields" });
         }
 
-        const imageKey = req.files && req.files.image ? await uploadImageToS3(req.files.image[0]) : null;
+        const imageKey = req.file ? await uploadImageToAzure(req.file) : null;
 
         const subcategory = new Subcategory({
           name,
@@ -114,7 +110,7 @@ const subcategoriesController = {
       }
 
       if (subcategory.imageKey) {
-        await deleteImageFromS3(subcategory.imageKey);
+        await deleteImageFromAzure(subcategory.imageKey);
       }
 
       await Subcategory.findByIdAndDelete(req.params.id);
@@ -140,13 +136,11 @@ const subcategoriesController = {
       res.status(500).json({ message: error.message });
     }
   },
-  
-  updateSubcategory: (req, res) => {
+
+  updateSubcategory: async (req, res) => {
     upload(req, res, async (err) => {
-      if (err instanceof multer.MulterError) {
-        return res.status(400).json({ message: err.message });
-      } else if (err) {
-        return res.status(500).json({ message: "Server error" });
+      if (err) {
+        return handleMulterError(err, res);
       }
 
       try {
@@ -158,24 +152,20 @@ const subcategoriesController = {
           return res.status(404).json({ message: "Subcategory not found" });
         }
 
-        let updatedSubcategoryData = updates;
+        // Prepare data for updating
+        let updatedSubcategoryData = { ...updates };
 
-        if (req.files && req.files.image) {
-          const newImageKey = await uploadImageToS3(req.files.image[0]);
-
+        if (req.file) {
+          const newImageKey = await uploadImageToAzure(req.file);
+          
           if (existingSubcategory.imageKey) {
-            await deleteImageFromS3(existingSubcategory.imageKey);
+            await deleteImageFromAzure(existingSubcategory.imageKey);
           }
 
-          updatedSubcategoryData = { ...updates, imageKey: newImageKey };
+          updatedSubcategoryData.imageKey = newImageKey;
         }
 
-        const updatedSubcategory = await Subcategory.findByIdAndUpdate(
-          id,
-          updatedSubcategoryData,
-          { new: true }
-        );
-
+        const updatedSubcategory = await Subcategory.findByIdAndUpdate(id, updatedSubcategoryData, { new: true });
         res.json(updatedSubcategory);
       } catch (error) {
         console.error("Error updating subcategory:", error);

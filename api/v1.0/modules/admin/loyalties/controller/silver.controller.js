@@ -1,129 +1,89 @@
-import AWS from "aws-sdk";
-import Silver from "../model/silver.model.js";
-import { v4 as uuidv4 } from 'uuid';
-import path from 'path';
-import dotenv from "dotenv";
+import { BlobServiceClient } from "@azure/storage-blob";
+import Silver from '../model/silver.model.js'
 import multer from "multer";
+import path from "path";
 
-dotenv.config();
+const AZURE_STORAGE_CONNECTION_STRING = process.env.AZURE_STORAGE_CONNECTION_STRING;
+const containerName = process.env.AZURE_STORAGE_CONTAINER_NAME;
 
-const s3 = new AWS.S3({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: process.env.AWS_REGION,
-});
+// Initialize Azure Blob Service Client
+const blobServiceClient = BlobServiceClient.fromConnectionString(AZURE_STORAGE_CONNECTION_STRING);
+const containerClient = blobServiceClient.getContainerClient(containerName);
 
+// Configure multer for file uploads
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage }).single('image');
+const upload = multer({ storage: storage });
 
-// Function to upload image to S3
-const uploadImageToS3 = async (file) => {
-  const fileExtension = path.extname(file.originalname);
-  const imageKey = `silver/${uuidv4()}${fileExtension}`;
+// Controller methods
 
-  const s3Params = {
-    Bucket: process.env.AWS_BUCKET_NAME,
-    Key: imageKey,
-    Body: file.buffer,
-    ACL: 'public-read',
-    ContentType: file.mimetype,
-  };
+export const createSilver = async (req, res) => {
+  try {
+      const { name, amount, points, minimumSpentValue, discount } = req.body;
+      const image = req.file; // Assuming image is uploaded as file
 
-  const uploadResult = await s3.upload(s3Params).promise();
-  return uploadResult.Key;
-};
+      // Upload image to Azure Blob Storage
+      const blobName = `silver/${Date.now()}_${image.originalname}`;
+      const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+      await blockBlobClient.upload(image.buffer, image.size);
 
-// Function to delete image from S3
-const deleteImageFromS3 = async (imageKey) => {
-  const s3Params = {
-    Bucket: process.env.AWS_BUCKET_NAME,
-    Key: imageKey,
-  };
+      // Generate public URL for the image
+      const imageUrl = `https://${process.env.AZURE_STORAGE_ACCOUNT_NAME}.blob.core.windows.net/${process.env.AZURE_STORAGE_CONTAINER_NAME}/${blobName}`;
 
-  await s3.deleteObject(s3Params).promise();
-};
-
-const silverController = {
-  createSilver: async (req, res) => {
-    upload(req, res, async (err) => {
-      if (err) {
-        return res.status(400).json({ message: "Error uploading image" });
-      }
-
-      try {
-        const { name, amount, points,minimumSpentValue,discount } = req.body;
-
-        if (!name || !amount || !points || !minimumSpentValue || !discount || !req.file ) {
-          return res.status(400).json({ message: "Please provide all required fields" });
-        }
-
-        // Upload the image to AWS S3
-        const imageKey = await uploadImageToS3(req.file);
-
-        // Create a new silver object with the image key
-        const silver = new Silver({
+      const silverItem = new Silver({
           name,
-          image: imageKey,
+          image: imageUrl, // Store the image URL
           amount,
-          points: Number(points),
+          points,
           minimumSpentValue,
-          discount
-        });
+          discount,
+      });
 
-        // Save the silver object to the database
-        const savedSilver = await silver.save();
-
-        // Respond with the created silver object
-        res.status(201).json(savedSilver);
-      } catch (error) {
-        console.error("Error creating silver:", error);
-        res.status(400).json({ message: error.message });
-      }
-    });
-  },
-
-  getAllSilver: async (req, res) => {
-    try {
-      const silverItems = await Silver.find();
-      res.json(silverItems);
-    } catch (error) {
-      console.error("Error retrieving silver items:", error);
-      res.status(500).json({ message: error.message });
-    }
-  },
-
-  getSilverById: async (req, res) => {
-    try {
-      const silver = await Silver.findById(req.params.id);
-      if (!silver) {
-        return res.status(404).json({ message: "Silver item not found" });
-      }
-      res.json(silver);
-    } catch (error) {
-      console.error("Error retrieving silver by ID:", error);
-      res.status(500).json({ message: error.message });
-    }
-  },
-
-  deleteSilver: async (req, res) => {
-    try {
-      const silver = await Silver.findById(req.params.id);
-      if (!silver) {
-        return res.status(404).json({ message: "Silver item not found" });
-      }
-
-      // Delete the image from S3
-      await deleteImageFromS3(silver.image);
-
-      // Delete the silver item from the database
-      await Silver.findByIdAndDelete(req.params.id);
-
-      res.status(200).json({ message: "Silver item deleted successfully" });
-    } catch (error) {
-      console.error("Error deleting silver item:", error);
-      res.status(500).json({ message: error.message });
-    }
+      await silverItem.save();
+      res.status(201).json(silverItem);  
+  } catch (error) {
+      res.status(500).json({ error: error.message });
   }
 };
 
-export default silverController;
+export const getSilver = async (req, res) => {
+    try {
+        const silverItems = await Silver.find();
+        res.status(200).json(silverItems);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+export const updateSilver = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const updates = req.body;
+
+        if (req.file) {
+            const image = req.file;
+            const blobName = `${Date.now()}_${image.originalname}`;
+            const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+            await blockBlobClient.upload(image.buffer, image.size);
+            updates.image = blobName; // Update image only if a new one is uploaded
+        }
+
+        const updatedSilver = await Silver.findByIdAndUpdate(id, updates, { new: true });
+        res.status(200).json(updatedSilver);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+export const deleteSilver = async (req, res) => {
+    try {
+        const { id } = req.params;
+        await Silver.findByIdAndDelete(id);
+        res.status(204).send();
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+// Middleware for file upload
+export const uploadImage = upload.single("image"); // Use this middleware in routes
+

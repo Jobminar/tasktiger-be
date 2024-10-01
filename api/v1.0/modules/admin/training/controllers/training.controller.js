@@ -1,4 +1,4 @@
-import AWS from 'aws-sdk';
+import { BlobServiceClient } from '@azure/storage-blob';
 import Training from '../models/training.model.js';
 import { v4 as uuidv4 } from 'uuid';
 import path from 'path';
@@ -7,46 +7,38 @@ import multer from 'multer';
 
 dotenv.config();
 
-const s3 = new AWS.S3({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: process.env.AWS_REGION,
-});
+// Azure Blob Storage configuration
+const blobServiceClient = BlobServiceClient.fromConnectionString(process.env.AZURE_STORAGE_CONNECTION_STRING);
+const containerClient = blobServiceClient.getContainerClient(process.env.AZURE_STORAGE_CONTAINER_NAME);
 
+// Multer configuration for file uploads
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage }).single('video');
+const upload = multer({ storage }).single('video');
 
-// Function to upload video to S3 with a specific key pattern
-const uploadVideoToS3 = async (file) => {
+// Function to upload video to Azure Blob Storage
+const uploadVideoToAzure = async (file) => {
   const fileExtension = path.extname(file.originalname);
-  const videoKey = `training-videos/${uuidv4()}${fileExtension}`;
+  const blobName = `training-videos/${uuidv4()}${fileExtension}`;
 
-  const s3Params = {
-    Bucket: process.env.AWS_BUCKET_NAME,
-    Key: videoKey,
-    Body: file.buffer,
-    ACL: 'public-read',
-    ContentType: file.mimetype,
-  };
+  const blockBlobClient = containerClient.getBlockBlobClient(blobName);
 
-  const uploadResult = await s3.upload(s3Params).promise();
+  await blockBlobClient.upload(file.buffer, file.buffer.length, {
+    blobHTTPHeaders: { blobContentType: file.mimetype },
+  });
+
   return {
-    key: uploadResult.Key,
-    url: uploadResult.Location,  // Public URL of the uploaded video
+    key: blobName,
+    url: blockBlobClient.url,
   };
 };
 
-// Function to delete video from S3
-const deleteVideoFromS3 = async (videoKey) => {
-  const s3Params = {
-    Bucket: process.env.AWS_BUCKET_NAME,
-    Key: videoKey,
-  };
-
-  await s3.deleteObject(s3Params).promise();
+// Function to delete video from Azure Blob Storage
+const deleteVideoFromAzure = async (videoKey) => {
+  const blockBlobClient = containerClient.getBlockBlobClient(videoKey);
+  await blockBlobClient.deleteIfExists();
 };
 
-// Error handling function for Multer
+// Error handling for multer
 const handleMulterError = (err, res) => {
   if (err instanceof multer.MulterError) {
     return res.status(400).json({ message: err.message });
@@ -55,26 +47,28 @@ const handleMulterError = (err, res) => {
   }
 };
 
+// Training controller
 const trainingController = {
   createTraining: async (req, res) => {
     upload(req, res, async (err) => {
-      handleMulterError(err, res);
-  
+      if (err) {
+        return handleMulterError(err, res);
+      }
+
       try {
         const { serviceId, quickLinks, skip, job, title } = req.body;
-  
-        // Convert `quickLinks` and `skip` to booleans
         const quickLinksBool = quickLinks === 'true';
         const skipBool = skip === 'true';
-  
-        if (!serviceId || typeof quickLinksBool !== 'boolean' || !job || !title || !req.file) {
+
+        // Validate required fields
+        if (!serviceId || !job || !title || !req.file) {
           return res.status(400).json({ message: 'Please provide all required fields' });
         }
-  
-        // Upload the video to AWS S3
-        const { key: videoKey, url: videoUrl } = await uploadVideoToS3(req.file);
-  
-        // Create a new training object with the video key and URL
+
+        // Upload video to Azure
+        const { key: videoKey, url: videoUrl } = await uploadVideoToAzure(req.file);
+
+        // Create new training record
         const training = new Training({
           serviceId,
           quickLinks: quickLinksBool,
@@ -84,43 +78,25 @@ const trainingController = {
           videoKey,
           videoUrl,
         });
-  
-        // Save the training object to the database
+
         const savedTraining = await training.save();
-  
-        // Respond with the created training object including the video URL
-        res.status(201).json({
-          ...savedTraining.toObject(),
-          videoUrl,  // Ensure video URL is included in response
-        });
+        res.status(201).json(savedTraining);
       } catch (error) {
         console.error('Error creating training:', error);
-        res.status(500).json({ message: 'Internal server error' });
+        res.status(500).json({ message: 'Internal server error', error });
       }
     });
   },
-    
- 
+
   getAllTrainings: async (req, res) => {
     try {
-      // Fetch all trainings from the database
       const trainings = await Training.find();
-  
-      // Map through the trainings to include the videoUrl in the response
-      const response = trainings.map(training => ({
-        ...training.toObject(),
-        videoUrl: training.videoUrl // Ensure video URL is included
-      }));
-  
-      // Respond with the list of trainings including video URLs
-      res.json(response);
+      res.status(200).json(trainings);
     } catch (error) {
       console.error('Error retrieving trainings:', error);
       res.status(500).json({ message: 'Internal server error' });
     }
   },
-  
-  
 
   getTrainingById: async (req, res) => {
     try {
@@ -128,7 +104,7 @@ const trainingController = {
       if (!training) {
         return res.status(404).json({ message: 'Training not found' });
       }
-      res.json(training);
+      res.status(200).json(training);
     } catch (error) {
       console.error('Error retrieving training by ID:', error);
       res.status(500).json({ message: 'Internal server error' });
@@ -142,11 +118,9 @@ const trainingController = {
         return res.status(404).json({ message: 'Training not found' });
       }
 
-      // Delete the video from S3
-      await deleteVideoFromS3(training.videoKey);
-
-      // Delete the training item from the database
-      await Training.findByIdAndDelete(req.params.id);
+      // Delete the video from Azure Blob Storage
+      await deleteVideoFromAzure(training.videoKey);
+      await training.deleteOne();
 
       res.status(200).json({ message: 'Training deleted successfully' });
     } catch (error) {
@@ -157,59 +131,59 @@ const trainingController = {
 
   updateTraining: async (req, res) => {
     upload(req, res, async (err) => {
-      handleMulterError(err, res);
-
+      if (err) {
+        return handleMulterError(err, res);
+      }
+  
       try {
         const { serviceId, quickLinks, skip, job, title } = req.body;
-        const { id } = req.params;
-
-        // Convert `quickLinks` and `skip` to booleans
-        const quickLinksBool = quickLinks === 'true';
-        const skipBool = skip === 'true';
-
-        if (!serviceId || typeof quickLinksBool !== 'boolean' || !job || !title) {
-          return res.status(400).json({ message: 'Please provide all required fields' });
-        }
-
-        const training = await Training.findById(id);
+  
+        const training = await Training.findById(req.params.id);
         if (!training) {
           return res.status(404).json({ message: 'Training not found' });
         }
-
-        // Update the training object
-        training.serviceId = serviceId;
-        training.quickLinks = quickLinksBool;
-        training.skip = skipBool;
-        training.job = job;
-        training.title = title;
-
-        // Check if a new video file is provided
+  
+        // Update only the fields that are provided in the request body
+        if (serviceId) {
+          training.serviceId = serviceId;
+        }
+        if (quickLinks !== undefined) {
+          const quickLinksBool = quickLinks === 'true';
+          training.quickLinks = quickLinksBool;
+        }
+        if (skip !== undefined) {
+          const skipBool = skip === 'true';
+          training.skip = skipBool;
+        }
+        if (job) {
+          training.job = job;
+        }
+        if (title) {
+          training.title = title;
+        }
+  
+        // Check if a new video file is uploaded and update the video
         if (req.file) {
-          // Upload the new video to AWS S3
-          const { key: newVideoKey, url: newVideoUrl } = await uploadVideoToS3(req.file);
-
-          // Delete the old video from S3
-          await deleteVideoFromS3(training.videoKey);
-
-          // Update the video key and URL in the training object
+          const { key: newVideoKey, url: newVideoUrl } = await uploadVideoToAzure(req.file);
+  
+          // Delete the old video from Azure Blob Storage
+          await deleteVideoFromAzure(training.videoKey);
+  
+          // Update the videoKey and videoUrl with the new uploaded file's data
           training.videoKey = newVideoKey;
           training.videoUrl = newVideoUrl;
         }
-
-        // Save the updated training object to the database
+  
+        // Save the updated training object
         const updatedTraining = await training.save();
-
-        // Respond with the updated training object including the video URL
-        res.status(200).json({
-          ...updatedTraining.toObject(),
-          videoUrl: training.videoUrl,  // Include updated video URL in response
-        });
+        res.status(200).json(updatedTraining);
       } catch (error) {
         console.error('Error updating training:', error);
         res.status(500).json({ message: 'Internal server error' });
       }
     });
-  },
+  },  
+
 };
 
 export default trainingController;

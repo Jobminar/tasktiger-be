@@ -1,48 +1,51 @@
-import AWS from "aws-sdk";
+import { BlobServiceClient } from '@azure/storage-blob';
 import Gold from "../model/gold.model.js";
 import { v4 as uuidv4 } from 'uuid';
 import path from 'path';
 import dotenv from "dotenv";
 import multer from "multer";
 
-dotenv.config();
+dotenv.config();  
 
-const s3 = new AWS.S3({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: process.env.AWS_REGION,
-});
+// Initialize Azure Blob Service Client
+const blobServiceClient = BlobServiceClient.fromConnectionString(process.env.AZURE_STORAGE_CONNECTION_STRING);
+const containerClient = blobServiceClient.getContainerClient(process.env.AZURE_STORAGE_CONTAINER_NAME);
 
-const storage = multer.memoryStorage();
+const storage = multer.memoryStorage();     
 const upload = multer({ storage: storage }).single('image');
 
-// Function to upload image to S3
-const uploadImageToS3 = async (file) => {
+// Function to upload image to Azure Blob Storage
+const uploadImageToAzure = async (file) => {
   const fileExtension = path.extname(file.originalname);
-  const imageKey = `gold/${uuidv4()}${fileExtension}`;
+  const blobName = `gold/${uuidv4()}${fileExtension}`; // Unique name for the blob
+  
+  // Ensure the container exists or create it if it doesn't
+  await containerClient.createIfNotExists({
+    access: 'container', // or 'blob' for private access
+    metadata: { createdBy: 'tasktiger' }, // optional metadata
+  });
 
-  const s3Params = {
-    Bucket: process.env.AWS_BUCKET_NAME,
-    Key: imageKey,
-    Body: file.buffer,
-    ACL: 'public-read',
-    ContentType: file.mimetype,
-  };
+  // Get a blockBlobClient for the file
+  const blockBlobClient = containerClient.getBlockBlobClient(blobName);
 
-  const uploadResult = await s3.upload(s3Params).promise();
-  return uploadResult.Key;
+  const uploadBlobResponse = await blockBlobClient.uploadData(file.buffer, {
+    blobHTTPHeaders: { blobContentType: file.mimetype },
+  });
+
+  console.log(`Upload block blob ${blobName} successfully`, uploadBlobResponse.requestId);
+
+  // Construct and return the correct full URL
+  return `https://${process.env.AZURE_STORAGE_ACCOUNT_NAME}.blob.core.windows.net/${process.env.AZURE_STORAGE_CONTAINER_NAME}/${blobName}`;
 };
 
-// Function to delete image from S3
-const deleteImageFromS3 = async (imageKey) => {
-  const s3Params = {
-    Bucket: process.env.AWS_BUCKET_NAME,
-    Key: imageKey,
-  };
 
-  await s3.deleteObject(s3Params).promise();
+// Function to delete image from Azure Blob Storage
+const deleteImageFromAzure = async (blobName) => {
+  const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+  await blockBlobClient.deleteIfExists();
 };
 
+// Controller object with CRUD functions
 const goldController = {
   createGold: (req, res) => {
     upload(req, res, async (err) => {
@@ -55,21 +58,22 @@ const goldController = {
       try {
         const { name, amount, points, minimumSpentValue, discount } = req.body;
 
+        // Validate required fields
         if (!name || !amount || !points || !req.file || !minimumSpentValue || !discount) {
           return res.status(400).json({ message: "Please provide all required fields" });
         }
 
-        // Upload the image to AWS S3
-        const imageKey = await uploadImageToS3(req.file);
+        // Upload the image to Azure Blob Storage
+        const imageUrl = await uploadImageToAzure(req.file);
 
-        // Create a new gold object with the image key
+        // Create a new gold object with the full image URL
         const gold = new Gold({
           name,
-          image: imageKey,
+          image: imageUrl, // Store the full URL in the database
           amount,
           points: Number(points),
           minimumSpentValue,
-          discount
+          discount,
         });
 
         // Save the gold object to the database
@@ -114,8 +118,8 @@ const goldController = {
         return res.status(404).json({ message: "Gold item not found" });
       }
 
-      // Delete the image from S3
-      await deleteImageFromS3(gold.image);
+      // Delete the image from Azure Blob Storage
+      await deleteImageFromAzure(gold.image);
 
       // Delete the gold item from the database
       await Gold.findByIdAndDelete(req.params.id);

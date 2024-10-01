@@ -3,7 +3,9 @@ import inductionController from '../controllers/induction.controller.js'
 
 const router = express.Router();
 
-router.post("/", inductionController.createInduction);
+// router.post("/", inductionController.createInduction);
+
+router.post('/', inductionController.upload.single('video'), inductionController.createInduction);
 
 router.get("/", inductionController.getAllInductions);
 

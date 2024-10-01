@@ -1,75 +1,82 @@
+import Category from "../models/categories.model.js";
+import Subcategory from '../models/sub.categories.model.js';
+import Service from '../models/services.model.js';
+import { BlobServiceClient } from "@azure/storage-blob";
 import { v4 as uuidv4 } from "uuid";
 import path from "path";
 import dotenv from "dotenv";
 import multer from "multer";
-import AWS from "aws-sdk";
-import Category from "../models/categories.model.js";
-import Subcategory from '../models/sub.categories.model.js'
-import Service from '../models/services.model.js'
 
 dotenv.config();
 
-const s3 = new AWS.S3({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: process.env.AWS_REGION,
-});
+// Azure Blob Storage configuration
+const blobServiceClient = BlobServiceClient.fromConnectionString(process.env.AZURE_STORAGE_CONNECTION_STRING);
+const containerClient = blobServiceClient.getContainerClient(process.env.AZURE_STORAGE_CONTAINER_NAME);
 
+// Multer configuration for image uploads
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage }).fields([{ name: 'image', maxCount: 1 }]);
+const upload = multer({ storage }).single("image");
 
-const uploadImageToS3 = async (file) => {
-  const fileExtension = path.extname(file.originalname);
-  const imageKey = `categories/${uuidv4()}${fileExtension}`;
+// Function to upload image to Azure Blob Storage
+const uploadImageToAzure = async (file) => {
+  const blobName = `categories/${uuidv4()}${path.extname(file.originalname)}`;
+  const blockBlobClient = containerClient.getBlockBlobClient(blobName);
 
-  const s3Params = {
-    Bucket: process.env.AWS_BUCKET_NAME,
-    Key: imageKey,
-    Body: file.buffer,
-    ACL: "public-read",
-    ContentType: file.mimetype,
-  };
+  // Upload file buffer to Azure Blob
+  await blockBlobClient.uploadData(file.buffer, {
+    blobHTTPHeaders: {
+      blobContentType: file.mimetype, // Set the content type to the file's mimetype
+    },
+  });
 
-  const uploadResult = await s3.upload(s3Params).promise();
-  return uploadResult.Location;
+  return blockBlobClient.url; // Return the URL to the uploaded image
 };
 
-const deleteImageFromS3 = async (imageKey) => {
-  const s3Params = {
-    Bucket: process.env.AWS_BUCKET_NAME,
-    Key: imageKey,
-  };
+// Function to delete image from Azure Blob Storage
+const deleteImageFromAzure = async (imageUrl) => {
+  const blobName = imageUrl.split("/").pop(); // Extract the blob name from the URL
+  const blockBlobClient = containerClient.getBlockBlobClient(blobName);
 
-  await s3.deleteObject(s3Params).promise();
+  await blockBlobClient.deleteIfExists(); // Delete the image if it exists
+};
+
+// Error handling for multer
+const handleMulterError = (err, res) => {
+  if (err instanceof multer.MulterError) {
+    return res.status(400).json({ message: err.message });
+  } else if (err) {
+    return res.status(500).json({ message: "Server error during file upload" });
+  }
 };
 
 const categoriesController = {
   createCategory: async (req, res) => {
     upload(req, res, async (err) => {
       if (err) {
-        return res.status(400).json({ message: "Error uploading image" });
+        console.error("Error uploading image:", err);
+        return handleMulterError(err, res); // Use the error handler
       }
 
       try {
         const { name, uiVariant } = req.body;
 
-        if (!name || !uiVariant || !req.files.image) {
+        if (!name || !uiVariant || !req.file) {
           return res.status(400).json({ message: "Please provide all required fields" });
         }
 
-        const imageKey = await uploadImageToS3(req.files.image[0]);
+        const imageUrl = await uploadImageToAzure(req.file); // No need to specify folder here; it is already managed in the function
 
         const category = new Category({
           name,
           uiVariant: Array.isArray(uiVariant) ? uiVariant : [uiVariant],
-          imageKey,
+          imageKey: imageUrl,
         });
 
-        await category.save();
-        res.status(201).json(category);
+        const savedCategory = await category.save();
+        res.status(201).json(savedCategory);
       } catch (error) {
         console.error("Error creating category:", error);
-        res.status(400).json({ message: error.message });
+        res.status(500).json({ message: error.message });
       }
     });
   },
@@ -97,109 +104,68 @@ const categoriesController = {
     }
   },
 
-  deleteCategory: async (req, res) => {
-    try {
-      const category = await Category.findById(req.params.id);
-      if (!category) {
-        return res.status(404).json({ message: "Category not found" });
-      }
-
-      console.log("Deleting category with ID:", req.params.id);
-      console.log("Image Key:", category.imageKey);
-
-      if (category.imageKey) {
-        await deleteImageFromS3(category.imageKey);
-      }
-
-      await Category.findByIdAndDelete(req.params.id);
-
-      res.status(200).json({ message: "Category deleted successfully" });
-    } catch (error) {
-      console.error("Error deleting category:", error);
-      res.status(500).json({ message: error.message });
-    }
-  },
-
   updateCategory: async (req, res) => {
     upload(req, res, async (err) => {
       if (err) {
-        return res.status(400).json({ message: "Error uploading image", error: err.message });
+        console.error("Error uploading image:", err);
+        return handleMulterError(err, res); // Use the error handler
       }
-  
+
       try {
         const { id } = req.params;
         const { name, uiVariant } = req.body;
-  
+
         const category = await Category.findById(id);
         if (!category) {
           return res.status(404).json({ message: "Category not found" });
         }
-  
+
         let imageKey = category.imageKey;
-  
-        // Check if file exists in the request
-        if (req.files && req.files.image) {
-          // Upload new image to S3 and update the image key
-          imageKey = await uploadImageToS3(req.files.image[0]);
-          // Delete old image from S3
+
+        if (req.file) {
+          imageKey = await uploadImageToAzure(req.file);
           if (category.imageKey) {
-            await deleteImageFromS3(category.imageKey);
+            await deleteImageFromAzure(category.imageKey);
           }
         }
-  
-        // Create an update object containing only the fields that need updating
-        const updateData = {};
-        if (name) updateData.name = name;
-        if (uiVariant) updateData.uiVariant = Array.isArray(uiVariant) ? uiVariant : [uiVariant];
-        if (req.files && req.files.image) updateData.imageKey = imageKey;
-  
-        updateData.updatedAt = Date.now();
-  
-        const updatedCategory = await Category.findByIdAndUpdate(
-          id,
-          updateData,
-          { new: true, runValidators: true }
-        );
-  
+
+        const updateData = {
+          ...(name && { name }),
+          ...(uiVariant && { uiVariant: Array.isArray(uiVariant) ? uiVariant : [uiVariant] }),
+          ...(req.file && { imageKey }),
+        };
+
+        const updatedCategory = await Category.findByIdAndUpdate(id, updateData, { new: true, runValidators: true });
         res.status(200).json(updatedCategory);
       } catch (error) {
         console.error("Error updating category:", error);
-        res.status(500).json({ message: "Internal server error", error: error.message });
+        res.status(500).json({ message: error.message });
       }
     });
-  },  
+  },
+
   deleteCategorySubcategoryService: async (req, res) => {
     try {
-      
       const category = await Category.findById(req.params.id);
       if (!category) {
         return res.status(404).json({ message: "Category not found" });
       }
-  
-      // Delete image from S3 if exists
+
       if (category.imageKey) {
-        await deleteImageFromS3(category.imageKey);
+        await deleteImageFromAzure(category.imageKey);
       }
-  
-      // Find and delete all subcategories related to this category
+
       const subcategories = await Subcategory.find({ categoryId: req.params.id });
-  
       for (const subcategory of subcategories) {
-        // Delete services associated with this subcategory
         await Service.deleteMany({ subCategoryId: subcategory._id });
-  
-        // Optionally delete subcategory images from S3 if you have imageKey for subcategories
         if (subcategory.imageKey) {
-          await deleteImageFromS3(subcategory.imageKey);
+          await deleteImageFromAzure(subcategory.imageKey);
         }
       }
-  
-      // Delete subcategories related to this category
+
       await Subcategory.deleteMany({ categoryId: req.params.id });
-  
-      // Finally, delete the category itself
       await Category.findByIdAndDelete(req.params.id);
-  
+
       res.status(200).json({ message: "Category and related subcategories and services deleted successfully" });
     } catch (error) {
       console.error("Error deleting category:", error);

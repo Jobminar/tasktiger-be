@@ -18,25 +18,23 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage }).single("image");
 
 // Function to upload image to S3
-const uploadImageToS3 = async (file, folderName) => {
-  try {
-    const fileExtension = path.extname(file.originalname);
-    const imageKey = `${folderName}/${uuidv4()}${fileExtension}`;
 
-    const s3Params = {
-      Bucket: process.env.AWS_BUCKET_NAME,
-      Key: imageKey,
-      Body: file.buffer,
-      ACL: "public-read",
-      ContentType: file.mimetype,
-    };
+// Function to upload image to Azure Blob Storage
+const uploadImageToAzure = async (file, folderName) => {
+  await containerClient.createIfNotExists({
+    access: 'container',
+    metadata: { createdBy: 'tasktiger' },
+  });
 
-    const uploadResult = await s3.upload(s3Params).promise();
-    return uploadResult.Location; // Return the S3 object URL
-  } catch (error) {
-    console.error("Error uploading image to S3:", error);
-    throw new Error("Error uploading image to S3");
-  }
+  const fileExtension = path.extname(file.originalname);
+  const blobName = `${folderName}/${uuidv4()}${fileExtension}`; // Use folderName parameter
+  const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+
+  await blockBlobClient.uploadData(file.buffer, {
+    blobHTTPHeaders: { blobContentType: file.mimetype },
+  });
+
+  return blockBlobClient.url; // Return the URL of the uploaded blob
 };
 
 // Function to delete image from S3

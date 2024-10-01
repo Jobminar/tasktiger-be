@@ -22,7 +22,7 @@ const inductionSchema = new mongoose.Schema(
       minlength: 2,
       maxlength: 200,
     },
-    videoKey: { 
+    video: { 
       type: String,
       required: true,
       trim: true,
@@ -32,11 +32,6 @@ const inductionSchema = new mongoose.Schema(
       required: true,
       default: false,
     },
-    providerId:{
-      type:String,
-      // required:true,
-      default:""
-    }
   },
   {
     timestamps: true,
@@ -44,6 +39,5 @@ const inductionSchema = new mongoose.Schema(
 
 );
 
-const Induction = mongoose.model("Induction", inductionSchema);
 
-export default Induction;
+export default mongoose.model("Induction", inductionSchema);

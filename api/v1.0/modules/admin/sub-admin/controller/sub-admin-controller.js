@@ -1,47 +1,52 @@
 import Subadmin from '../model/sub-admin-model.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import AWS from 'aws-sdk';
-import { v4 as uuidv4 } from 'uuid';
-import path from 'path';
 import dotenv from 'dotenv';
-import multer from 'multer';
+import multer from 'multer';  
+import { BlobServiceClient } from '@azure/storage-blob';
+import { v4 as uuidv4 } from 'uuid';
+import path from 'path';  // To handle file extensions
 
-dotenv.config();
+dotenv.config();  
 
-const s3 = new AWS.S3({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: process.env.AWS_REGION,
-});
+if (!process.env.AZURE_STORAGE_CONNECTION_STRING || !process.env.AZURE_STORAGE_CONTAINER_NAME) {
+  throw new Error('Azure Storage connection string or container name not defined in environment variables.');
+}
+  
+// Initialize Azure Blob Service Client
+const blobServiceClient = BlobServiceClient.fromConnectionString(process.env.AZURE_STORAGE_CONNECTION_STRING);
+const containerClient = blobServiceClient.getContainerClient(process.env.AZURE_STORAGE_CONTAINER_NAME);
 
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage }).fields([
-  { name: 'image', maxCount: 1 },
-  { name: 'documents', maxCount: 10 },
-]);
+// Function to upload a file to Azure Blob Storage
+const uploadFileToAzure = async (file) => {
+  try {
+    const fileExtension = path.extname(file.originalname);
+    const blobName = `sub-admins/${uuidv4()}${fileExtension}`;  // Create a unique blob name
+    const blockBlobClient = containerClient.getBlockBlobClient(blobName);
 
-const uploadImageToS3 = async (file) => {
-  const fileExtension = path.extname(file.originalname);
-  const imageKey = `subadmin/${uuidv4()}${fileExtension}`;
+    await blockBlobClient.uploadData(file.buffer, {
+      blobHTTPHeaders: { blobContentType: file.mimetype },
+    });
 
-  const s3Params = {
-    Bucket: process.env.AWS_BUCKET_NAME,
-    Key: imageKey,
-    Body: file.buffer,
-    ACL: 'public-read',
-    ContentType: file.mimetype,
-  };
-
-  const uploadResult = await s3.upload(s3Params).promise();
-  return uploadResult.Key;
+    return blockBlobClient.url;  // Return the URL of the uploaded blob
+  } catch (error) {
+    console.error('Azure Blob Storage upload error:', error);
+    throw new Error('Failed to upload file to Azure Blob Storage.');  // This will return a meaningful error message
+  }
 };
+
+// Multer configuration for file uploads in memory
+const storage = multer.memoryStorage();
+const upload = multer({ storage }).fields([
+  { name: 'image', maxCount: 1 },  // Allow 1 image file
+  { name: 'documents', maxCount: 5 }  // Allow up to 5 document files
+]);
 
 const subadminController = {
   subAdminRegister: async (req, res) => {
     upload(req, res, async (err) => {
       if (err) {
-        return res.status(400).json({ message: "Error uploading files." });
+        return res.status(400).json({ message: 'Error uploading files.' });
       }
 
       const {
@@ -66,26 +71,40 @@ const subadminController = {
       } = req.body;
 
       try {
+        // Check if the subadmin already exists
         const existingSubadmin = await Subadmin.findOne({ loginEmailId });
         if (existingSubadmin) {
-          return res.status(400).json({ message: "Subadmin already exists." });
+          return res.status(400).json({ message: 'Subadmin already exists.' });
         }
 
+        if (!password) {
+          return res.status(400).json({ message: 'Password is required.' });
+        }
+
+        // Hash the password before saving
         const hashedPassword = await bcrypt.hash(password, 12);
 
-        let imageKey = '';
-        let documentKeys = [];
-
-        if (req.files.image) {
-          imageKey = await uploadImageToS3(req.files.image[0]);
+        // Upload image to Azure Blob Storage (if provided)
+        let imageUrl = '';
+        if (req.files && req.files.image) {
+          try {
+            imageUrl = await uploadFileToAzure(req.files.image[0]);
+          } catch (error) {
+            return res.status(500).json({ message: 'Failed to upload image.', details: error.message });
+          }
         }
 
-        if (req.files.documents) {
-          documentKeys = await Promise.all(
-            req.files.documents.map((file) => uploadImageToS3(file))
-          );
+        // Upload documents to Azure Blob Storage (if provided)
+        let documentUrls = [];
+        if (req.files && req.files.documents) {
+          try {
+            documentUrls = await Promise.all(req.files.documents.map((file) => uploadFileToAzure(file)));
+          } catch (error) {
+            return res.status(500).json({ message: 'Failed to upload documents.', details: error.message });
+          }
         }
 
+        // Create new Subadmin
         const newSubadmin = new Subadmin({
           fullName,
           mobileNo,
@@ -105,59 +124,86 @@ const subadminController = {
           ifscCode,
           branchName,
           branchAddress,
-          image: imageKey,
-          documents: documentKeys
+          image: imageUrl,
+          documents: documentUrls
         });
 
         await newSubadmin.save();
 
-        res.status(201).json({ message: "Subadmin registered successfully." });
+        res.status(201).json({ message: 'Subadmin registered successfully.' });
       } catch (error) {
-        console.log(error, 'error');
-        res.status(500).json({ message: "Something went wrong." });
+        console.error('Error during subadmin registration:', error);
+        res.status(500).json({ message: 'Something went wrong.', details: error.message });
       }
     });
   },
 
+ 
   subAdminLogin: async (req, res) => {
     const { loginEmailId, password } = req.body;
-
+  
+    // Log input data for debugging
+    console.log('Login attempt with:', { loginEmailId, password });
+  
     try {
+      // Check if the subadmin exists
       const subadmin = await Subadmin.findOne({ loginEmailId });
       if (!subadmin) {
-        return res.status(404).json({ message: "Subadmin not found." });
+        console.log('Subadmin not found for email:', loginEmailId);  // Debugging log
+        return res.status(404).json({ message: 'Subadmin not found.' });
       }
-
+  
+      // Check if the password matches
       const isPasswordCorrect = await bcrypt.compare(password, subadmin.password);
       if (!isPasswordCorrect) {
-        return res.status(400).json({ message: "Invalid credentials." });
+        console.log('Password does not match for:', loginEmailId);  // Debugging log
+        return res.status(400).json({ message: 'Invalid credentials.' });
       }
-
-      const token = jwt.sign({ id: subadmin._id, loginEmailId: subadmin.loginEmailId }, 'secret', { expiresIn: '1h' });
-
+  
+      // Log that login is successful
+      console.log('Subadmin logged in:', subadmin.loginEmailId);
+  
+      // Generate JWT token
+      const token = jwt.sign(
+        { id: subadmin._id, loginEmailId: subadmin.loginEmailId },
+        process.env.JWT_SECRET || 'secret',
+        { expiresIn: '1h' }
+      );
+  
+      // Log the generated token for debugging
+      console.log('JWT token generated:', token);
+  
       res.status(200).json({ result: token, id: subadmin._id });
     } catch (error) {
-      res.status(500).json({ message: "Something went wrong." });
+      console.error('Error during login:', error);
+      res.status(500).json({ message: 'Something went wrong.', details: error.message });
     }
   },
+  
+
   getAllSubAdmins: async (req, res) => {
     try {
       const subadmins = await Subadmin.find();
       res.status(200).json(subadmins);
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "Failed to retrieve sub-admins." });
+      console.error('Error retrieving subadmins:', error);
+      res.status(500).json({ message: 'Failed to retrieve subadmins.', details: error.message });
     }
   },
+
   updateSubadmin: async (req, res) => {
     const subadminId = req.params.id;
     const updateFields = req.body;
+
     try {
       const updatedSubadmin = await Subadmin.findByIdAndUpdate(subadminId, updateFields, { new: true });
+      if (!updatedSubadmin) {
+        return res.status(404).json({ message: 'Subadmin not found.' });
+      }
       res.status(200).json(updatedSubadmin);
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "Failed to update subadmin." });
+      console.error('Error updating subadmin:', error);
+      res.status(500).json({ message: 'Failed to update subadmin.', details: error.message });
     }
   },
 };

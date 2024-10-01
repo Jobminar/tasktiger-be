@@ -6,6 +6,7 @@
     "swagger": "node ./utils/swagger.js"
   },
   "dependencies": {
+    "@azure/storage-blob": "^12.25.0",
     "aws-sdk": "^2.1616.0",
     "axios": "^1.6.8",
     "bcrypt": "^5.1.1",

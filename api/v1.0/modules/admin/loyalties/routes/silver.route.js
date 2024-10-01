@@ -1,11 +1,11 @@
-import express from 'express'
-import silverController from '../controller/silver.controller.js'
+import express from "express";
+import { createSilver, getSilver, updateSilver, deleteSilver, uploadImage } from '../controller/silver.controller.js'
 
-const router=express.Router()
+const router = express.Router();
 
-router.post("/",silverController.createSilver)
-router.get("/",silverController.getAllSilver)
-router.delete("/delete/:id",silverController.deleteSilver)
-router.get("/silver/:id",silverController.getSilverById)
+router.post("/", uploadImage, createSilver); // Use the upload middleware
+router.get("/", getSilver);
+router.put("/:id", uploadImage, updateSilver); // Use the upload middleware
+router.delete("/:id", deleteSilver);
 
-export default router
+export default router;

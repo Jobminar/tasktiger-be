@@ -1,46 +1,43 @@
 import Service from "../models/services.model.js";
+import { BlobServiceClient } from "@azure/storage-blob";
 import { v4 as uuidv4 } from "uuid";
 import path from "path";
 import dotenv from "dotenv";
 import multer from "multer";
-import AWS from "aws-sdk";
 
 dotenv.config();
 
-const s3 = new AWS.S3({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: process.env.AWS_REGION,
-});
+// Azure Blob Storage configuration
+const blobServiceClient = BlobServiceClient.fromConnectionString(process.env.AZURE_STORAGE_CONNECTION_STRING);
+const containerClient = blobServiceClient.getContainerClient(process.env.AZURE_STORAGE_CONTAINER_NAME);
 
+// Multer configuration for image uploads
 const storage = multer.memoryStorage();
 const upload = multer({ storage }).single("image");
 
-const uploadImageToS3 = async (file) => {
-  const fileExtension = path.extname(file.originalname);
-  const imageKey = `services/${uuidv4()}${fileExtension}`;
+// Function to upload image to Azure Blob Storage
+const uploadImageToAzure = async (file) => {
+  const blobName = `services/${uuidv4()}${path.extname(file.originalname)}`;
+  const blockBlobClient = containerClient.getBlockBlobClient(blobName);
 
-  const s3Params = {
-    Bucket: process.env.AWS_BUCKET_NAME,
-    Key: imageKey,
-    Body: file.buffer,
-    ACL: "public-read",
-    ContentType: file.mimetype,
-  };
+  await blockBlobClient.uploadData(file.buffer, {
+    blobHTTPHeaders: {
+      blobContentType: file.mimetype,
+    },
+  });
 
-  const uploadResult = await s3.upload(s3Params).promise();
-  return uploadResult.Location;
+  return blockBlobClient.url; // Return the URL to the uploaded image
 };
 
-const deleteImageFromS3 = async (imageKey) => {
-  const s3Params = {
-    Bucket: process.env.AWS_BUCKET_NAME,
-    Key: imageKey,
-  };
+// Function to delete image from Azure Blob Storage
+const deleteImageFromAzure = async (imageUrl) => {
+  const blobName = imageUrl.split("/").pop();
+  const blockBlobClient = containerClient.getBlockBlobClient(blobName);
 
-  await s3.deleteObject(s3Params).promise();
+  await blockBlobClient.deleteIfExists();
 };
 
+// Service Controller
 const serviceController = {
   createService: async (req, res) => {
     upload(req, res, async (err) => {
@@ -54,16 +51,9 @@ const serviceController = {
           return res.status(400).json({ error: "No file uploaded" });
         }
 
-        const image = await uploadImageToS3(req.file);
+        const image = await uploadImageToAzure(req.file);
 
-        const {
-          name,
-          description,
-          categoryId,
-          subCategoryId,
-          variantName,
-          isMostBooked,
-        } = req.body;
+        const { name, description, categoryId, subCategoryId, variantName, isMostBooked } = req.body;
 
         const newService = new Service({
           image,
@@ -72,7 +62,7 @@ const serviceController = {
           categoryId,
           subCategoryId,
           variantName,
-          isMostBooked:isMostBooked || false
+          isMostBooked: isMostBooked || false,
         });
 
         const service = await newService.save();
@@ -103,21 +93,12 @@ const serviceController = {
 
         if (req.file) {
           if (service.image) {
-            const imageKey = service.image.split('/').pop();
-            await deleteImageFromS3(imageKey);
+            await deleteImageFromAzure(service.image); // Use service.image to delete
           }
-
-          updateData.image = await uploadImageToS3(req.file);
+          updateData.image = await uploadImageToAzure(req.file); // Use Azure upload function
         }
-
-        updateData.updatedAt = Date.now();
 
         const updatedService = await Service.findByIdAndUpdate(id, updateData, { new: true, runValidators: true });
-
-        if (!updatedService) {
-          return res.status(404).json({ message: "Service not found" });
-        }
-
         res.status(200).json(updatedService);
       } catch (error) {
         console.error("Error updating service:", error);
@@ -130,17 +111,14 @@ const serviceController = {
     const { id } = req.params;
 
     try {
-      const service = await Service.findByIdAndDelete(id);
-
+      const service = await Service.findById(id);
       if (!service) {
         return res.status(404).json({ message: "Service not found" });
       }
 
-      if (service.image) {
-        const imageKey = service.image.split('/').pop();
-        await deleteImageFromS3(imageKey);
-      }
+      await deleteImageFromAzure(service.image); // Delete associated image
 
+      await Service.findByIdAndDelete(id);
       res.status(200).json({ message: "Service deleted successfully" });
     } catch (error) {
       console.error("Error deleting service:", error);
